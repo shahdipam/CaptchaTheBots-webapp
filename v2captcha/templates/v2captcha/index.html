@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block title %}V2 Captchaç{% endblock %}
+
+{% block content %}
+    <h2>Captcha Form</h2>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Submit</button>
+    </form>
+{% endblock %}
+
