@@ -2,3 +2,4 @@
 .DS_Store
 media/images/
 templates/static
+captchaform/settings.py
