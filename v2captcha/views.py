@@ -13,7 +13,8 @@ import cv2
 from PIL import Image
 from io import BytesIO
 import base64
-
+import random
+import matplotlib.pyplot as plt
 
 
 # Create your views here.
@@ -27,6 +28,42 @@ def index(request):
     else:
         form = CaptchaForm()
     return render(request, 'v2captcha/index.html', {'form': form})
+
+def custom_captcha(request):
+
+    imgpath = str(settings.BASE_DIR) + "/templates/static"
+    items = os.listdir(imgpath)
+    items.remove(".DS_Store")
+    items.remove("Other")
+    right = random.choice(items)
+
+    n = random.randint(3, 5)
+    images = []
+    for i in random.sample(os.listdir(imgpath + "/" + right), n):
+        images.append(right+"/" + i)
+
+    for i in random.sample(os.listdir(imgpath + "/Other"), 9-n):
+        images.append("Other/" + i)
+
+    random.shuffle(images)
+    print(images)
+    noisy = []
+    for i in images:
+        path = imgpath = str(settings.BASE_DIR) +"/templates/static/"+ str(i)
+        im = Image.open(path)
+        im_arr = np.array(im)
+
+        noise_factor = 0.02
+        noises = ['s&p', 'speckle', 'Poisson']
+        choice = random.choice(noises)
+        if choice == 's&p':
+            noise_img = random_noise(im_arr, mode=choice,clip=True, amount=noise_factor)
+        else:
+            noise_img = random_noise(im_arr, mode=choice,clip=True)
+
+        noisy.append(image_to_base64(noise_img))
+
+    return render(request, 'v2captcha/login.html', {'n':9, 'images':images, 'right':right,'noisy': noisy, 'show':False})
 
 
 

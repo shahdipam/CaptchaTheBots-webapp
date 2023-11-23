@@ -8,5 +8,6 @@ from django.conf import settings
 urlpatterns = [
     path("", views.index, name="index"),
     path("upload/", views.upload_image, name="upload_image"),
+    path("captcha/", views.custom_captcha, name="custom_captcha"),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

@@ -12,6 +12,11 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 
 from pathlib import Path
 import os
+from keras.models import load_model
+from tensorflow.keras.datasets import cifar10
+from tensorflow.keras.utils import to_categorical
+import numpy as np
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -134,12 +139,44 @@ STATICFILES_DIRS = [
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # V2 Keys
-RECAPTCHA_PUBLIC_KEY = 'xxx'
-RECAPTCHA_PRIVATE_KEY = 'xxx'
+RECAPTCHA_PUBLIC_KEY = '6LdYo8EoAAAAAHvvueBhuJG5L2ifm_HNts8EmZsj'
+RECAPTCHA_PRIVATE_KEY = '6LdYo8EoAAAAAGxUp4rZqXLBpESIphYEVeQz45TK'
 
 # V3 Keys
-V3RECAPTCHA_PUBLIC_KEY = "xxx"
-V3RECAPTCHA_PRIVATE_KEY = "xxx"
+V3RECAPTCHA_PUBLIC_KEY = "6LeGFsEoAAAAAO5w-kDQ7ux1uG9ZKy7AO1sOC3fd"
+V3RECAPTCHA_PRIVATE_KEY = "6LeGFsEoAAAAAFsUqZEboHkTSKE679lni8GS1oNz"
+
+# model = load_model('cnn_20_epochs.h5')
+# (X_train, y_train), (X_test, y_test) = cifar10.load_data()
 
 
-# https://recaptcha-demo.appspot.com/
+
+
+
+
+
+# import tensorflow as tf
+# import matplotlib.pyplot as plt
+# import random
+
+# # Load the CIFAR-10 dataset
+# (x_train, y_train), (_, _) = tf.keras.datasets.cifar10.load_data()
+
+# # Get 4 random labels
+# random_labels = random.sample(range(10), 4)
+
+# # Get 9 random images with 4 of them having the same label
+# RANDOM_IMAGES = []
+# random_categories = []
+# for label in random_labels:
+#     label_indices = [i for i, y in enumerate(y_train) if y == label]
+#     random_indices = random.sample(label_indices, 1)
+#     RANDOM_IMAGES.append(x_train[random_indices[0]])
+#     random_categories.append(label)
+
+# # Get 5 additional random images
+# additional_indices = random.sample(range(len(x_train)), 5)
+# for index in additional_indices:
+#     RANDOM_IMAGES.append(x_train[index])
+#     random_categories.append(y_train[index][0])
+
