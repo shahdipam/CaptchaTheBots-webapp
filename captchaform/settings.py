@@ -146,37 +146,43 @@ RECAPTCHA_PRIVATE_KEY = '6LdYo8EoAAAAAGxUp4rZqXLBpESIphYEVeQz45TK'
 V3RECAPTCHA_PUBLIC_KEY = "6LeGFsEoAAAAAO5w-kDQ7ux1uG9ZKy7AO1sOC3fd"
 V3RECAPTCHA_PRIVATE_KEY = "6LeGFsEoAAAAAFsUqZEboHkTSKE679lni8GS1oNz"
 
-# model = load_model('cnn_20_epochs.h5')
-# (X_train, y_train), (X_test, y_test) = cifar10.load_data()
+import numpy as np 
+import pandas as pd 
+import os
+from keras.preprocessing.image import ImageDataGenerator
+import tensorflow as tf
+from keras.models import Sequential
+from keras.models import Model
+from keras.callbacks import ModelCheckpoint, LearningRateScheduler, EarlyStopping, ReduceLROnPlateau, TensorBoard
+from tensorflow.keras import optimizers, losses, activations, models
+from keras.layers import Convolution2D, Dense, Input, Flatten, Dropout, MaxPooling2D, BatchNormalization, GlobalAveragePooling2D, Concatenate
+from art.estimators.classification import KerasClassifier
+# tf.compat.v1.disable_eager_execution()
+
+MODEL = tf.keras.models.load_model(str(BASE_DIR)+'/Recaptcha.h5')
+MODEL.compile(loss='categorical_crossentropy', 
+              optimizer=optimizers.Adam(lr=1e-3),
+              metrics=['accuracy'])
+
+# CLASSIFIER = classifier = KerasClassifier(clip_values=(0, 255), model=MODEL)
+
+
+LABEL_NAMES = ['Bicycle', 'Bridge', 'Bus', 'Car', 'Chimney', 'Crosswalk', 'Hydrant',
+               'Motorcycle', 'Other', 'Palm', 'Stair', 'Traffic Light']
+
+LABEL_DICT = {label: i for i, label in enumerate(LABEL_NAMES)}
+
+FGSM_DIFF = np.load(str(BASE_DIR)+'/fsgm_attack_diff.npy')
+HSJ_DIFF = np.load(str(BASE_DIR)+'/hopskip_attack_diff.npy')
+PGD_DIFF = np.load(str(BASE_DIR)+'/pgd_attack_diff.npy')
 
 
 
+# Resize the array to shape (150, 150, 3) and fill missing values with 255
+HSJ_ARR = np.zeros((150, 150, 3), dtype=np.uint8) + 255
+HSJ_ARR[:HSJ_DIFF.shape[0], :HSJ_DIFF.shape[1], :] = HSJ_DIFF
 
 
-
-
-# import tensorflow as tf
-# import matplotlib.pyplot as plt
-# import random
-
-# # Load the CIFAR-10 dataset
-# (x_train, y_train), (_, _) = tf.keras.datasets.cifar10.load_data()
-
-# # Get 4 random labels
-# random_labels = random.sample(range(10), 4)
-
-# # Get 9 random images with 4 of them having the same label
-# RANDOM_IMAGES = []
-# random_categories = []
-# for label in random_labels:
-#     label_indices = [i for i, y in enumerate(y_train) if y == label]
-#     random_indices = random.sample(label_indices, 1)
-#     RANDOM_IMAGES.append(x_train[random_indices[0]])
-#     random_categories.append(label)
-
-# # Get 5 additional random images
-# additional_indices = random.sample(range(len(x_train)), 5)
-# for index in additional_indices:
-#     RANDOM_IMAGES.append(x_train[index])
-#     random_categories.append(y_train[index][0])
-
+# Resize the array to shape (150, 150, 3) and fill missing values with 255
+PGD_ARR = np.zeros((150, 150, 3), dtype=np.uint8) + 255
+PGD_ARR[:PGD_DIFF.shape[0], :PGD_DIFF.shape[1], :] = PGD_DIFF

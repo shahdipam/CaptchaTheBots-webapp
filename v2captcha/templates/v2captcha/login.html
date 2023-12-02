@@ -5,7 +5,7 @@
 {% block content %}
 
 {% load static %}
-<h3 id="captchaText" style="text-align: center;">Pick the correct {{right}}</h3>
+<h2 id="captchaText" style="text-align: center;">Pick the correct {{right}}</h2>
 
 <div class="container">
 
@@ -23,7 +23,7 @@
         </div>
         </div><br><br>
 
-        <div style="border-left:2px solid #040404;height:900px"></div>
+        <div style="border-left:2px solid #040404;height:790px"></div>
 
         <div class="captcha-container">
             <div>
@@ -34,7 +34,7 @@
                     <img class="captcha-photo" src="data:image/png;base64,{{ noise }}"></img>
                 {% endfor %}
             </div>
-            <h1 style="text-align: center;">Ensemble Noise Captcha</h1>
+            <h1 style="text-align: center;">Ensemble Attack Captcha</h1>
             </div> 
         </div><br><br>
 
@@ -52,7 +52,8 @@
         
         margin: 0 auto;
         padding: 20px;
-        background-color: rgb(214, 211, 211);
+        border: #040404;
+        background-color: #f9f9f9;
         flex-direction: row;
         display: flex;
         border-radius: 5px;
@@ -62,7 +63,7 @@
     .captcha-container {
         display: flex;
         align-items: center;
-        background-color: rgb(214, 211, 211);
+        background-color: #f9f9f9;
         width: fit-content;
         padding: 20px;
     }
@@ -84,6 +85,8 @@
     h2 {
         text-align: center;
         margin-bottom: 20px;
+        background-color: #040404;
+        color: white;
     }
 
     label {
@@ -95,6 +98,7 @@
         position: relative;
         display: grid;
         grid-template-columns: repeat(3, 1fr);
+        border-color: #ddd;
         gap: 10px;
         padding: 20px;
         z-index: 1;
@@ -103,7 +107,7 @@
     .captcha-photo {
         width: 200px;
         height: 200px;
-        background-color: #f2f2f2;
+        background-color: #fff;
         border: 1px solid #ccc;
     }
 
