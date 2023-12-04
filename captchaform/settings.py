@@ -159,11 +159,48 @@ from keras.layers import Convolution2D, Dense, Input, Flatten, Dropout, MaxPooli
 from art.estimators.classification import KerasClassifier
 # tf.compat.v1.disable_eager_execution()
 
-MODEL = tf.keras.models.load_model(str(BASE_DIR)+'/Recaptcha.h5')
+
+src_path_train = str(BASE_DIR)+"/templates/static/"
+batch_size = 64
+
+train_datagen = ImageDataGenerator(
+        rescale=1 / 255.0,
+        #rotation_range=20,
+        zoom_range=0.05,
+        #width_shift_range=0.05,
+        #height_shift_range=0.05,
+        #shear_range=0.05,
+        horizontal_flip=True,
+        #fill_mode="nearest",
+        validation_split=0.20)
+
+
+train_generator = train_datagen.flow_from_directory(
+    directory=src_path_train,
+    target_size=(150, 150),
+    color_mode="rgb",
+    batch_size=batch_size,
+    class_mode="categorical",
+    subset='training',
+    shuffle=True,
+    seed=42
+)
+
+valid_generator = train_datagen.flow_from_directory(
+    directory=src_path_train,
+    target_size=(150, 150),
+    color_mode="rgb",
+    batch_size=batch_size,
+    class_mode="categorical",
+    subset='validation',
+    shuffle=True,
+    seed=42
+)
+
+MODEL = tf.keras.models.load_model(str(BASE_DIR)+'/GoogleRecaptcha_81.h5')
 MODEL.compile(loss='categorical_crossentropy', 
               optimizer=optimizers.Adam(lr=1e-3),
               metrics=['accuracy'])
-
 # CLASSIFIER = classifier = KerasClassifier(clip_values=(0, 255), model=MODEL)
 
 
@@ -186,3 +223,16 @@ HSJ_ARR[:HSJ_DIFF.shape[0], :HSJ_DIFF.shape[1], :] = HSJ_DIFF
 # Resize the array to shape (150, 150, 3) and fill missing values with 255
 PGD_ARR = np.zeros((150, 150, 3), dtype=np.uint8) + 255
 PGD_ARR[:PGD_DIFF.shape[0], :PGD_DIFF.shape[1], :] = PGD_DIFF
+
+
+# import random
+# # MODEL.evaluate(valid_generator)
+
+# X_train, y_train = train_generator.next()
+# rand_idx = random.randint(10,1)
+
+# image = X_train[rand_idx]
+# label = LABEL_NAMES[rand_idx]
+# image = np.expand_dims(image, axis=0)
+
+# print(LABEL_NAMES[MODEL.predict(image).argmax()])

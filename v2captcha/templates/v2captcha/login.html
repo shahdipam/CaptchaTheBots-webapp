@@ -29,9 +29,12 @@
             <div>
 
             <div class="captcha-grid" id="captchaGrid" >
-
-                {% for noise in noisy %}
+                
+                {% for noise, name in noisy %}
+                <div class="captcha-photo-container">
                     <img class="captcha-photo" src="data:image/png;base64,{{ noise }}"></img>
+                    <p style="text-align: center; margin-top: -25px; color: white;">{{name}}</p>
+                </div>
                 {% endfor %}
             </div>
             <h1 style="text-align: center;">Ensemble Attack Captcha</h1>

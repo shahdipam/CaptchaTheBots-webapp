@@ -70,6 +70,7 @@ def custom_captcha(request):
     random.shuffle(images)
     # print(images)
     noisy = []
+    noise_names = []
     for i in images:
         path = imgpath = str(settings.BASE_DIR) +"/templates/static/"+ str(i)
         im = Image.open(path)
@@ -83,15 +84,23 @@ def custom_captcha(request):
         rand = random.randint(0, 2)
         if rand == 0:
             noisy_img = generate_fgsm(im_arr,label,0.2).numpy()
+            noise_names.append("FGSM")
 
         if rand == 1:
             noisy_img = im_arr + settings.HSJ_ARR
+            noise_names.append("HSJ")
+
         if rand == 2:
             noisy_img = im_arr + settings.PGD_ARR
+            noise_names.append("PGD")
+
         
+        # print(settings.LABEL_NAMES[settings.MODEL.predict(im_arr).argmax()])
+        # print(settings.LABEL_NAMES[settings.MODEL.predict(noisy_img).argmax()])
         noisy.append(image_to_base64(noisy_img))
 
-    return render(request, 'v2captcha/login.html', {'n':9, 'images':images, 'right':right,'noisy': noisy, 'show':False})
+    return render(request, 'v2captcha/login.html', {'n':9, 'images':images, 'right':right,'noisy': zip(noisy, noise_names),
+                                                    'noisenames': noise_names , 'show':False})
 
 def generate_fgsm(image, label, epsilon=0.1):
   image = tf.cast(image, tf.float32)
